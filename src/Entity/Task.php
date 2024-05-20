@@ -57,9 +57,13 @@ class Task
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $ManyToOne = null;
+    private ?string $ManyToOne = '';
 
-    #[ORM\ManyToOne]
+    /**
+     * Category.
+     */
+    #[ORM\ManyToOne(targetEntity: Category::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
     /**
@@ -132,16 +136,15 @@ class Task
         $this->title = $title;
     }
 
-    public function getManyToOne(): ?string
+    public function getManyToOne(): string
     {
         return $this->ManyToOne;
     }
 
-    public function setManyToOne(string $ManyToOne): static
+    public function setManyToOne(string $ManyToOne): void
     {
         $this->ManyToOne = $ManyToOne;
 
-        return $this;
     }
 
     public function getCategory(): ?Category
@@ -149,10 +152,8 @@ class Task
         return $this->category;
     }
 
-    public function setCategory(?Category $category): static
+    public function setCategory(?Category $category): void
     {
         $this->category = $category;
-
-        return $this;
     }
 }

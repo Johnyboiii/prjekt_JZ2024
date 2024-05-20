@@ -6,8 +6,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Monolog\DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -34,18 +34,18 @@ class Category
     /**
      * Created at.
      *
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     /**
      * Updated at.
      *
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?DateTimeImmutable $updatedAt = null;
 
     /**
      * Title.
@@ -68,9 +68,9 @@ class Category
     /**
      * Getter for created at.
      *
-     * @return \DateTimeImmutable Created at
+     * @return DateTimeImmutable Created at
      */
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -88,9 +88,9 @@ class Category
     /**
      * Getter for updated at.
      *
-     * @return \DateTimeImmutable Updated at
+     * @return DateTimeImmutable Updated at
      */
-    public function getUpdatedAt(): \DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }
