@@ -7,7 +7,6 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Service\TaskService;
-use App\Service\TaskServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ class TaskController extends AbstractController
     /**
      * Constructor.
      */
-    public function __construct(private readonly TaskServiceInterface $taskService)
+    public function __construct(private readonly TaskService $taskService)
     {
     }
 

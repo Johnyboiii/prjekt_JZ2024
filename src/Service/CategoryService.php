@@ -5,38 +5,41 @@
 
 namespace App\Service;
 
-use App\Repository\CategoryRepository;
 use App\Entity\Category;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
+use App\Entity\Task;
+use App\Repository\CategoryRepository;
+use App\Repository\TaskRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Repository\TaskRepository;
 
 /**
  * Class CategoryService.
  */
 class CategoryService implements CategoryServiceInterface
 {
-    private TaskRepository $taskRepository;
+    /**
+     * Paginator.
+     */
+    private PaginatorInterface $paginator;
 
     /**
-     * Items per page.
-     *
-     * Use constants to define configuration options that rarely change instead
-     * of specifying them in app/config/config.yml.
-     * See https://symfony.com/doc/current/best_practices.html#configuration
-     *
-     * @constant int
+     * Category repository.
      */
-    private const PAGINATOR_ITEMS_PER_PAGE = 10;
+    private CategoryRepository $categoryRepository;
+
+    /**
+     * Transaction repository.
+     */
+    private TaskRepository $taskRepository;
 
     /**
      * Constructor.
      *
-     * @param CategoryRepository $categoryRepository Category repository
-     * @param PaginatorInterface $paginator          Paginator
-     * @param TaskRepository     $taskRepository     Task repository
+     * @param CategoryRepository    $categoryRepository Category repository
+     * @param PaginatorInterface    $paginator          Paginator
+     * @param TaskRepository $taskRepository     Transaction repository
      */
     public function __construct(CategoryRepository $categoryRepository, PaginatorInterface $paginator, TaskRepository $taskRepository)
     {
@@ -57,7 +60,7 @@ class CategoryService implements CategoryServiceInterface
         return $this->paginator->paginate(
             $this->categoryRepository->queryAll(),
             $page,
-            self::PAGINATOR_ITEMS_PER_PAGE
+            TaskRepository::PAGINATOR_ITEMS_PER_PAGE
         );
     }
 
@@ -68,16 +71,17 @@ class CategoryService implements CategoryServiceInterface
      */
     public function save(Category $category): void
     {
+        $category->setCreatedAt(new \DateTimeImmutable());
+        if (null !== $category->getId()) {
+            $category->setUpdatedAt(new \DateTimeImmutable());
+        }
         $this->categoryRepository->save($category);
     }
 
     /**
      * Delete entity.
      *
-     * @param Category $category Category entity
-     *
-     * @throws OptimisticLockException
-     * @throws ORMException
+     * @param Category $category Category
      */
     public function delete(Category $category): void
     {
@@ -100,5 +104,19 @@ class CategoryService implements CategoryServiceInterface
         } catch (NoResultException|NonUniqueResultException) {
             return false;
         }
+    }
+
+    /**
+     * Find by id.
+     *
+     * @param int $id Category id
+     *
+     * @return Category|null Category entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneById(int $id): ?Category
+    {
+        return $this->categoryRepository->findOneById($id);
     }
 }
